@@ -13,7 +13,7 @@ const routes = {
   PaymentComplete: '/payment-complete',
 };
 
-export const { Stack, useFlow } = stackflow({
+const stack = stackflow({
   transitionDuration: 350,
   activities: screens,
   plugins: [
@@ -25,3 +25,6 @@ export const { Stack, useFlow } = stackflow({
   ],
   initialActivity: () => "A",
 });
+
+export const { Stack, useFlow } = stack;
+export default stack;
