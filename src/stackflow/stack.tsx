@@ -6,11 +6,13 @@ const routes = {
   A: '/',
   B: '/b',
   C: '/c',
+  D: '/d',
   Login: '/login',
   Home: '/home',
   Product: '/product/:productId',
   Order: '/order',
   PaymentComplete: '/payment-complete',
+  PopToTest: '/pop-to-test',
 };
 
 const stack = stackflow({
