@@ -40,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           {scenarios.map(s => (
             <li key={s.id} style={{ margin: '0.5rem 0' }}>
               {s.action ? (
-                <button onClick={s.action} style={{ width: '100%', padding: '0.75rem', textAlign: 'left', border: '1px solid #ccc', borderRadius: '4px', background: '#f0f0f0', cursor: 'pointer' }}>
+                <button onClick={s.action} style={{ width: '100%', padding: '0.75rem', textAlign: 'left', border: '1px solid #ccc', borderRadius: '4px', background: '#f0f0f0', cursor: 'pointer', color:'black' }}>
                   [{s.id.toString().padStart(2, '0')}] {s.title}
                 </button>
               ) : (
