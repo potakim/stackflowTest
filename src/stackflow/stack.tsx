@@ -55,6 +55,10 @@ const stack = stackflow({
 
         // Routes for TC5
         ArticleScreen: "/nav-tc5-article/:id",
+
+        // Routes for TC6
+        TC06_HomeScreen: "/nav-tc6-home",
+        TC06_ModalScreen: "/nav-tc6-modal",
       },
       fallbackActivity: () => "NavHomeScreen",
       useHash: true,

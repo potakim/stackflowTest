@@ -46,6 +46,13 @@ const NavigationTestPage: React.FC = () => {
         stack.actions.push('ArticleScreen', { id: '99' });
       }
     },
+    {
+      id: 'TC06',
+      title: '모달과 스택 관계',
+      action: () => {
+        stack.actions.push('TC06_ModalScreen', {});
+      }
+    },
     // More scenarios will be added here
   ];
 

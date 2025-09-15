@@ -330,3 +330,29 @@ export const ArticleScreen = () => {
     </div>
   );
 };
+
+// --- TC06: Modal and Stack Relationship ---
+
+export const TC06_HomeScreen = () => {
+  const flow = useFlow();
+  return (
+    <div>
+      <h2>TC06: Modal Home</h2>
+      <button onClick={() => flow.push('TC06_ModalScreen', {})}>Open Modal</button>
+    </div>
+  );
+};
+
+export const TC06_ModalScreen = () => {
+  const flow = useFlow();
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
+        <h2>Modal Screen</h2>
+        <p>This is a modal.</p>
+        <button onClick={() => flow.push('DetailScreen', { id: 'fromModal' })}>Push Detail from Modal</button>
+        <button onClick={() => flow.pop()} style={{ marginLeft: '0.5rem' }}>Close</button>
+      </div>
+    </div>
+  );
+};

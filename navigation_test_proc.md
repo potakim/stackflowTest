@@ -24,7 +24,7 @@
 | TC03 | 스택 내 단계별 Step 관리 | ✅ Completed | `pop`을 3번 호출하여 이전 화면으로 돌아가도록 구현 |
 | TC04 | 탭 네비게이션과 스택 병행 관리 | ✅ Completed | Stackflow 단독으로 구현 어려울 수 있음 |
 | TC05 | 푸시 알림으로 특정 화면 이동 | ✅ Completed | |
-| TC06 | 모달과 스택 관계 | ⬜️ Not Started | |
+| TC06 | 모달과 스택 관계 | ✅ Completed | |
 | TC07 | 조건부 네비게이션 (인증 여부) | ⬜️ Not Started | |
 | TC08 | 스택 일부만 제거 | ⬜️ Not Started | |
 | TC09 | 중복 화면 방지 | ⬜️ Not Started | |
