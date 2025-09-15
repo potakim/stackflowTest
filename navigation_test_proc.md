@@ -25,7 +25,7 @@
 | TC04 | 탭 네비게이션과 스택 병행 관리 | ✅ Completed | Stackflow 단독으로 구현 어려울 수 있음 |
 | TC05 | 푸시 알림으로 특정 화면 이동 | ✅ Completed | |
 | TC06 | 모달과 스택 관계 | ✅ Completed | |
-| TC07 | 조건부 네비게이션 (인증 여부) | ⬜️ Not Started | |
+| TC07 | 조건부 네비게이션 (인증 여부) | ✅ Completed | |
 | TC08 | 스택 일부만 제거 | ⬜️ Not Started | |
 | TC09 | 중복 화면 방지 | ⬜️ Not Started | |
 | TC10 | 백스택 없이 특정 화면 이동 | ⬜️ Not Started | `replace` 액션 |

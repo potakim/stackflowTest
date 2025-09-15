@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useFlow } from '../stackflow/stack';
+import stack from '../stackflow/stack';
 import { useActivity, useStack } from '@stackflow/react';
 import type { Activity } from "@stackflow/core";
 
@@ -36,7 +36,6 @@ export const A = () => {
 };
 
 export const B = () => {
-  const flow = useFlow();
   const { params } = useActivity();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -45,9 +44,9 @@ export const B = () => {
     <div data-testid="screen-B">
       <h2>Screen B</h2>
       <p>User ID: {(params as any).userId ?? 'N/A'}</p>
-      <button onClick={() => flow.push("C", {})}>Push C</button>
+      <button onClick={() => stack.actions.push("C", {})}>Push C</button>
       <button onClick={openModal}>Open Modal (Scenario 08)</button>
-      <button onClick={() => flow.pop()}>Pop</button>
+      <button onClick={() => stack.actions.pop()}>Pop</button>
       <LocalModal isOpen={isModalOpen} onClose={closeModal}>
         <div data-testid="modal-content">
           <h3>Modal on B</h3>
@@ -59,22 +58,20 @@ export const B = () => {
 };
 
 export const C = () => {
-  const flow = useFlow();
   return (
     <div data-testid="screen-C">
       <h2>Screen C</h2>
-      <button onClick={() => flow.push('D', {})}>Push D</button>
-      <button onClick={() => flow.pop()}>Pop</button>
+      <button onClick={() => stack.actions.push('D', {})}>Push D</button>
+      <button onClick={() => stack.actions.pop()}>Pop</button>
     </div>
   );
 };
 
 export const D = () => {
-  const flow = useFlow();
   return (
     <div data-testid="screen-D">
       <h2>Screen D</h2>
-      <button onClick={() => flow.pop()}>Pop</button>
+      <button onClick={() => stack.actions.pop()}>Pop</button>
     </div>
   );
 };
@@ -93,34 +90,31 @@ export const Home = () => (
 );
 
 export const Product = () => {
-  const flow = useFlow();
   const { params } = useActivity();
   return (
     <div data-testid="screen-Product">
       <h2>Product Screen</h2>
       <p>Product ID: {(params as any).productId}</p>
-      <button onClick={() => flow.push('Order', { orderId: 'O1' })}>Push Order</button>
-      <button onClick={() => flow.push('PaymentComplete', { receiptId: 'R1' })}>Push PaymentComplete</button>
-      <button onClick={() => flow.pop()}>Pop</button>
+      <button onClick={() => stack.actions.push('Order', { orderId: 'O1' })}>Push Order</button>
+      <button onClick={() => stack.actions.push('PaymentComplete', { receiptId: 'R1' })}>Push PaymentComplete</button>
+      <button onClick={() => stack.actions.pop()}>Pop</button>
     </div>
   );
 };
 
 export const Order = () => {
-  const flow = useFlow();
   const { params } = useActivity();
   return (
     <div data-testid="screen-Order">
       <h2>Order Screen</h2>
       <p>Order ID: {(params as any).orderId ?? 'N/A'}</p>
-      <button onClick={() => flow.push('PaymentComplete', { receiptId: 'R1' })}>Push PaymentComplete</button>
-      <button onClick={() => flow.pop()}>Pop</button>
+      <button onClick={() => stack.actions.push('PaymentComplete', { receiptId: 'R1' })}>Push PaymentComplete</button>
+      <button onClick={() => stack.actions.pop()}>Pop</button>
     </div>
   );
 };
 
 export const PaymentComplete = () => {
-  const flow = useFlow();
   const { params } = useActivity();
   const { activities } = useStack();
   const popTo = (activityName: string) => {
@@ -134,7 +128,7 @@ export const PaymentComplete = () => {
     const popCount = currentIndex - targetIndex;
     if (popCount > 0) {
       for (let i = 0; i < popCount; i++) {
-        flow.pop();
+        stack.actions.pop();
       }
     }
   };
@@ -143,13 +137,12 @@ export const PaymentComplete = () => {
       <h2>Payment Complete</h2>
       <p>Receipt ID: {(params as any).receiptId}</p>
       <button onClick={() => popTo('Product')}>Pop to Product (Scenario 06)</button>
-      <button onClick={() => flow.pop()}>Pop</button>
+      <button onClick={() => stack.actions.pop()}>Pop</button>
     </div>
   );
 };
 
 export const PopToTest = () => {
-  const flow = useFlow();
   const { activities } = useStack();
   const popTo = (activityName: string) => {
     const targetActivity = [...activities].reverse().find((a: Activity) => a.name === activityName);
@@ -163,7 +156,7 @@ export const PopToTest = () => {
     const popCount = currentIndex - targetIndex;
     if (popCount > 0) {
       for (let i = 0; i < popCount; i++) {
-        flow.pop();
+        stack.actions.pop();
       }
     }
   };
@@ -171,19 +164,18 @@ export const PopToTest = () => {
     <div data-testid="screen-PopToTest">
       <h2>PopTo Test Screen</h2>
       <button onClick={() => popTo('NonExistent' as any)}>Pop to NonExistent (Scenario 07)</button>
-      <button onClick={() => flow.pop()}>Pop</button>
+      <button onClick={() => stack.actions.pop()}>Pop</button>
     </div>
   );
 };
 
 // Scenario 09
 export const Modal = () => {
-  const flow = useFlow();
   return (
     <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'white', padding: '2rem', border: '1px solid black', zIndex: 100 }}>
       <h2>Modal Activity</h2>
       <p>뒤로가기 시 이 모달이 먼저 닫혀야 합니다.</p>
-      <button onClick={() => flow.pop()}>Close Modal</button>
+      <button onClick={() => stack.actions.pop()}>Close Modal</button>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useActivity, useStack } from '@stackflow/react';
 import type { Activity } from '@stackflow/core';
-import { useFlow } from '../stackflow/stack';
+import stack from '../stackflow/stack';
 
 // --- 기존 컴포넌트 (변경 없음) ---
 
@@ -13,17 +13,15 @@ export const NavHomeScreen = () => (
 );
 
 export const ListScreen = () => {
-  const flow = useFlow();
   return (
     <div data-testid="list-screen">
       <h2>List Screen</h2>
-      <button onClick={() => flow.push('DetailScreen', { id: '1' })}>Go to Detail 1</button>
+      <button onClick={() => stack.actions.push('DetailScreen', { id: '1' })}>Go to Detail 1</button>
     </div>
   );
 };
 
 export const DetailScreen = () => {
-  const flow = useFlow();
   const { params } = useActivity();
   const id = (params as { id: string }).id;
   const nextId = parseInt(id, 10) + 1;
@@ -32,40 +30,37 @@ export const DetailScreen = () => {
     <div data-testid={`detail-screen-${id}`}>
       <h2>Detail Screen {id}</h2>
       <p>Content for item {id}.</p>
-      <button onClick={() => flow.push('DetailScreen', { id: nextId.toString() })}>Go to Detail {nextId}</button>
-      <button onClick={() => flow.pop()}>Go Back</button>
+      <button onClick={() => stack.actions.push('DetailScreen', { id: nextId.toString() })}>Go to Detail {nextId}</button>
+      <button onClick={() => stack.actions.pop()}>Go Back</button>
     </div>
   );
 };
 
 export const Step1Screen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="step1-screen">
             <h2>Step 1</h2>
-            <button onClick={() => flow.push('Step2Screen', {})}>Next Step</button>
+            <button onClick={() => stack.actions.push('Step2Screen', {})}>Next Step</button>
         </div>
     );
 };
 
 export const Step2Screen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="step2-screen">
             <h2>Step 2</h2>
-            <button onClick={() => flow.push('Step3Screen', {})}>Next Step</button>
-            <button onClick={() => flow.pop()}>Prev Step</button>
+            <button onClick={() => stack.actions.push('Step3Screen', {})}>Next Step</button>
+            <button onClick={() => stack.actions.pop()}>Prev Step</button>
         </div>
     );
 };
 
 export const Step3Screen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="step3-screen">
             <h2>Step 3</h2>
-            <button onClick={() => flow.replace('SuccessScreen', {})}>Finish</button>
-            <button onClick={() => flow.pop()}>Prev Step</button>
+            <button onClick={() => stack.actions.replace('SuccessScreen', {})}>Finish</button>
+            <button onClick={() => stack.actions.pop()}>Prev Step</button>
         </div>
     );
 };
@@ -78,56 +73,51 @@ export const SuccessScreen = () => (
 );
 
 export const TC1_HomeScreen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="tc1-home-screen">
             <h2>TC1: Reset to Home</h2>
-            <button onClick={() => flow.push('TC1_Screen1', {})}>Go to Screen 1</button>
+            <button onClick={() => stack.actions.push('TC1_Screen1', {})}>Go to Screen 1</button>
         </div>
     );
 };
 
 export const TC1_Screen1 = () => {
-    const flow = useFlow();
     return (
         <div data-testid="tc1-screen1">
             <h2>TC1: Screen 1</h2>
-            <button onClick={() => flow.push('TC1_Screen2', {})}>Go to Screen 2</button>
-            <button onClick={() => flow.pop()}>Back</button>
+            <button onClick={() => stack.actions.push('TC1_Screen2', {})}>Go to Screen 2</button>
+            <button onClick={() => stack.actions.pop()}>Back</button>
         </div>
     );
 };
 
 export const TC1_Screen2 = () => {
-    const flow = useFlow();
-    const stack = useStack();
+    const { activities } = useStack();
     return (
         <div data-testid="tc1-screen2">
             <h2>TC1: Screen 2</h2>
             <button onClick={() => {
-                const stackSize = stack.activities.length;
+                const stackSize = activities.length;
                 for (let i = 0; i < stackSize - 1; i++) {
-                    flow.pop();
+                    stack.actions.pop();
                 }
             }}>Reset to Home</button>
-            <button onClick={() => flow.pop()}>Back</button>
+            <button onClick={() => stack.actions.pop()}>Back</button>
         </div>
     );
 };
 
 export const TC2_ListScreen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="tc2-list-screen">
             <h2>TC2: List Screen</h2>
-            <button onClick={() => flow.push('TC2_DetailScreen', { id: '1' })}>Go to Detail 1</button>
+            <button onClick={() => stack.actions.push('TC2_DetailScreen', { id: '1' })}>Go to Detail 1</button>
         </div>
     );
 };
 
 export const TC2_DetailScreen = () => {
-    const flow = useFlow();
-    const stack = useStack();
+    const { activities } = useStack();
     const activity = useActivity();
     const params = activity.params as { id: string };
     const id = params.id;
@@ -137,10 +127,8 @@ export const TC2_DetailScreen = () => {
         <div data-testid={`tc2-detail-screen-${id}`}>
             <h2>TC2: Detail Screen {id}</h2>
             <p>Content for item {id}.</p>
-            <button onClick={() => flow.push('TC2_DetailScreen', { id: nextId.toString() })}>Go to Detail {nextId}</button>
+            <button onClick={() => stack.actions.push('TC2_DetailScreen', { id: nextId.toString() })}>Go to Detail {nextId}</button>
             <button onClick={() => {
-                const { activities } = stack;
-                
                 const targetIndex = activities.findLastIndex(
                     (act: Activity) => act.name === 'TC2_ListScreen',
                 );
@@ -150,49 +138,46 @@ export const TC2_DetailScreen = () => {
                     
                     if (popsToPerform > 0) {
                         for (let i = 0; i < popsToPerform; i++) {
-                            flow.pop();
+                            stack.actions.pop();
                         }
                     }
                 }
             }}>Back to List</button>
-            <button onClick={() => flow.pop()}>Back</button>
+            <button onClick={() => stack.actions.pop()}>Back</button>
         </div>
     );
 };
 
 export const TC3_Step1Screen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="tc3-step1-screen">
             <h2>TC3: Step 1</h2>
-            <button onClick={() => flow.push('TC3_Step2Screen', {})}>Next</button>
+            <button onClick={() => stack.actions.push('TC3_Step2Screen', {})}>Next</button>
         </div>
     );
 };
 
 export const TC3_Step2Screen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="tc3-step2-screen">
             <h2>TC3: Step 2</h2>
-            <button onClick={() => flow.push('TC3_Step3Screen', {})}>Next</button>
-            <button onClick={() => flow.pop()}>Prev</button>
+            <button onClick={() => stack.actions.push('TC3_Step3Screen', {})}>Next</button>
+            <button onClick={() => stack.actions.pop()}>Prev</button>
         </div>
     );
 };
 
 export const TC3_Step3Screen = () => {
-    const flow = useFlow();
     return (
         <div data-testid="tc3-step3-screen">
             <h2>TC3: Step 3</h2>
             <button onClick={() => {
                 // Pop Step3, Step2, and Step1
-                flow.pop();
-                flow.pop();
-                flow.pop();
+                stack.actions.pop();
+                stack.actions.pop();
+                stack.actions.pop();
             }}>Finish</button>
-            <button onClick={() => flow.pop()}>Prev</button>
+            <button onClick={() => stack.actions.pop()}>Prev</button>
         </div>
     );
 };
@@ -304,11 +289,12 @@ export function ProfileTab() {
   );
 };
 
-export function Article({ id }: { id: string }) {
+export function Article() {
   const { pop } = useTabNavigation();
+  const { params } = useActivity() as unknown as { params: { id: string } };
   return (
     <div>
-      <h2>Article {id}</h2>
+      <h2>Article {params.id}</h2>
       <p>This is the article content.</p>
       <button onClick={pop}>Back</button>
     </div>
@@ -319,14 +305,13 @@ export function Article({ id }: { id: string }) {
 
 export const ArticleScreen = () => {
   const { params } = useActivity();
-  const flow = useFlow();
   const id = (params as { id: string }).id ?? 'N/A';
 
   return (
     <div>
       <h2>Article {id}</h2>
       <p>This is the article content, accessed via push.</p>
-      <button onClick={() => flow.pop()}>Back</button>
+      <button onClick={() => stack.actions.pop()}>Back</button>
     </div>
   );
 };
@@ -334,25 +319,109 @@ export const ArticleScreen = () => {
 // --- TC06: Modal and Stack Relationship ---
 
 export const TC06_HomeScreen = () => {
-  const flow = useFlow();
   return (
     <div>
       <h2>TC06: Modal Home</h2>
-      <button onClick={() => flow.push('TC06_ModalScreen', {})}>Open Modal</button>
+      <button onClick={() => stack.actions.push('TC06_ModalScreen', {})}>Open Modal</button>
     </div>
   );
 };
 
 export const TC06_ModalScreen = () => {
-  const flow = useFlow();
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ background: 'white', padding: '2rem', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)' }}>
         <h2>Modal Screen</h2>
         <p>This is a modal.</p>
-        <button onClick={() => flow.push('DetailScreen', { id: 'fromModal' })}>Push Detail from Modal</button>
-        <button onClick={() => flow.pop()} style={{ marginLeft: '0.5rem' }}>Close</button>
+        <button onClick={() => stack.actions.push('DetailScreen', { id: 'fromModal' })}>Push Detail from Modal</button>
+        <button onClick={() => stack.actions.pop()} style={{ marginLeft: '0.5rem' }}>Close</button>
       </div>
+    </div>
+  );
+};
+
+// --- TC07: Conditional Navigation ---
+
+const AuthContext = createContext({
+  isLoggedIn: false,
+  login: () => {},
+  logout: () => {},
+});
+
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const loggedIn = (window as any).__isLoggedIn ?? false;
+    return loggedIn;
+  });
+
+  const login = () => {
+    setIsLoggedIn(true);
+    (window as any).__isLoggedIn = true;
+  };
+  const logout = () => {
+    setIsLoggedIn(false);
+    (window as any).__isLoggedIn = false;
+  };
+
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const TC07_HomeScreen = () => {
+  const { isLoggedIn, logout } = useAuth();
+
+  return (
+    <div>
+      <h2>TC07: Home</h2>
+      {isLoggedIn ? (
+        <>
+          <p>Welcome! You are logged in.</p>
+          <button onClick={() => stack.actions.push('TC07_ProfileScreen', {})}>Go to Profile</button>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <>
+          <p>You are not logged in.</p>
+          <button onClick={() => stack.actions.push('TC07_ProfileScreen', {})}>Go to Profile (should redirect)</button>
+        </>
+      )}
+    </div>
+  );
+};
+
+export const TC07_LoginScreen = () => {
+  const { login } = useAuth();
+  const { params } = useActivity();
+  
+  const onLogin = () => {
+    login();
+    const redirectTo = (params as { redirectTo?: string }).redirectTo;
+    if (redirectTo) {
+      stack.actions.replace(redirectTo as any, {});
+    } else {
+      stack.actions.pop();
+    }
+  };
+
+  return (
+    <div>
+      <h2>TC07: Login</h2>
+      <p>Please log in to continue.</p>
+      <button onClick={onLogin}>Log In</button>
+    </div>
+  );
+};
+
+export const TC07_ProfileScreen = () => {
+  return (
+    <div>
+      <h2>TC07: Profile</h2>
+      <p>This is a protected page.</p>
     </div>
   );
 };

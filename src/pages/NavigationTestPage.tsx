@@ -50,7 +50,14 @@ const NavigationTestPage: React.FC = () => {
       id: 'TC06',
       title: '모달과 스택 관계',
       action: () => {
-        stack.actions.push('TC06_ModalScreen', {});
+        stack.actions.push('TC06_HomeScreen', {});
+      }
+    },
+    {
+      id: 'TC07',
+      title: '조건부 네비게이션 (인증 여부)',
+      action: () => {
+        stack.actions.push('TC07_HomeScreen', {});
       }
     },
     // More scenarios will be added here
