@@ -157,3 +157,40 @@ export const TC2_DetailScreen = () => {
         </div>
     );
 };
+
+export const TC3_Step1Screen = () => {
+    const flow = useFlow();
+    return (
+        <div data-testid="tc3-step1-screen">
+            <h2>TC3: Step 1</h2>
+            <button onClick={() => flow.push('TC3_Step2Screen', {})}>Next</button>
+        </div>
+    );
+};
+
+export const TC3_Step2Screen = () => {
+    const flow = useFlow();
+    return (
+        <div data-testid="tc3-step2-screen">
+            <h2>TC3: Step 2</h2>
+            <button onClick={() => flow.push('TC3_Step3Screen', {})}>Next</button>
+            <button onClick={() => flow.pop()}>Prev</button>
+        </div>
+    );
+};
+
+export const TC3_Step3Screen = () => {
+    const flow = useFlow();
+    return (
+        <div data-testid="tc3-step3-screen">
+            <h2>TC3: Step 3</h2>
+            <button onClick={() => {
+                // Pop Step3, Step2, and Step1
+                flow.pop();
+                flow.pop();
+                flow.pop();
+            }}>Finish</button>
+            <button onClick={() => flow.pop()}>Prev</button>
+        </div>
+    );
+};

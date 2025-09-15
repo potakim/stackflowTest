@@ -2,22 +2,11 @@ import { stackflow } from "@stackflow/react";
 import { basicRendererPlugin } from "@stackflow/plugin-renderer-basic";
 import { historySyncPlugin } from "@stackflow/plugin-history-sync";
 import { basicUIPlugin } from "@stackflow/plugin-basic-ui";
-import * as screens from "../components/screens";
-import * as navScreens from "../components/navigation_screens";
-
-const allActivities = {
-  ...screens,
-  ...navScreens,
-  TC1_HomeScreen: navScreens.TC1_HomeScreen,
-  TC1_Screen1: navScreens.TC1_Screen1,
-  TC1_Screen2: navScreens.TC1_Screen2,
-  TC2_ListScreen: navScreens.TC2_ListScreen,
-  TC2_DetailScreen: navScreens.TC2_DetailScreen,
-};
+import { activities } from "./activities";
 
 const stack = stackflow({
   transitionDuration: 350,
-  activities: allActivities,
+  activities,
   plugins: [
     basicRendererPlugin(),
     basicUIPlugin({
@@ -55,6 +44,11 @@ const stack = stackflow({
         // Routes for TC2
         TC2_ListScreen: "/nav-tc2-list",
         TC2_DetailScreen: "/nav-tc2-detail/:id",
+
+        // Routes for TC3
+        TC3_Step1Screen: "/nav-tc3-step1",
+        TC3_Step2Screen: "/nav-tc3-step2",
+        TC3_Step3Screen: "/nav-tc3-step3",
       },
       fallbackActivity: () => "A",
       useHash: true,

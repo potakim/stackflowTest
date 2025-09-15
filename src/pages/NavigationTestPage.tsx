@@ -28,7 +28,7 @@ const NavigationTestPage: React.FC = () => {
       id: 'TC03',
       title: '스택 내 단계별 Step 관리',
       action: () => {
-        stack.actions.push('Step1Screen', {});
+        stack.actions.push('TC3_Step1Screen', {});
       }
     },
     // More scenarios will be added here
