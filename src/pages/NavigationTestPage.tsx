@@ -38,6 +38,14 @@ const NavigationTestPage: React.FC = () => {
         stack.actions.push('MainTabs', {});
       }
     },
+    {
+      id: 'TC05',
+      title: '푸시 알림으로 특정 화면 이동',
+      action: () => {
+        // Simulate receiving a push notification for Article 99
+        stack.actions.push('ArticleScreen', { id: '99' });
+      }
+    },
     // More scenarios will be added here
   ];
 

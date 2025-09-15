@@ -52,6 +52,9 @@ const stack = stackflow({
 
         // Routes for TC4
         MainTabs: "/nav-tc4-tabs",
+
+        // Routes for TC5
+        ArticleScreen: "/nav-tc5-article/:id",
       },
       fallbackActivity: () => "NavHomeScreen",
       useHash: true,

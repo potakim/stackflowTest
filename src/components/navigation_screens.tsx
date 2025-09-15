@@ -314,3 +314,19 @@ export function Article({ id }: { id: string }) {
     </div>
   );
 };
+
+// --- TC05: Push Notification Navigation ---
+
+export const ArticleScreen = () => {
+  const { params } = useActivity();
+  const flow = useFlow();
+  const id = (params as { id: string }).id ?? 'N/A';
+
+  return (
+    <div>
+      <h2>Article {id}</h2>
+      <p>This is the article content, accessed via push.</p>
+      <button onClick={() => flow.pop()}>Back</button>
+    </div>
+  );
+};
