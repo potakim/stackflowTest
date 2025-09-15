@@ -194,3 +194,65 @@ export const TC3_Step3Screen = () => {
         </div>
     );
 };
+
+export const MainTabs = () => {
+  const flow = useFlow();
+  const { name } = useActivity();
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ flex: 1, overflow: 'auto' }}>
+        {name === 'HomeTab' && <HomeTab />}
+        {name === 'SearchTab' && <SearchTab />}
+        {name === 'ProfileTab' && <ProfileTab />}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-around', borderTop: '1px solid #ccc', padding: '10px 0' }}>
+        <button onClick={() => flow.replace('HomeTab', {})}>Home</button>
+        <button onClick={() => flow.replace('SearchTab', {})}>Search</button>
+        <button onClick={() => flow.replace('ProfileTab', {})}>Profile</button>
+      </div>
+    </div>
+  );
+};
+
+export const HomeTab = () => {
+  const flow = useFlow();
+  return (
+    <div>
+      <h2>Home Tab</h2>
+      <button onClick={() => flow.push('Article', { id: '1' })}>View Article 1</button>
+    </div>
+  );
+};
+
+export const SearchTab = () => {
+  const flow = useFlow();
+  return (
+    <div>
+      <h2>Search Tab</h2>
+      <button onClick={() => flow.push('Article', { id: '2' })}>View Article 2</button>
+    </div>
+  );
+};
+
+export const ProfileTab = () => {
+  const flow = useFlow();
+  return (
+    <div>
+      <h2>Profile Tab</h2>
+      <button onClick={() => flow.push('Article', { id: '3' })}>View Article 3</button>
+    </div>
+  );
+};
+
+export const Article = () => {
+  const { params } = useActivity();
+  const flow = useFlow();
+  return (
+    <div>
+      <h2>Article {(params as { id: string }).id}</h2>
+      <p>This is the article content.</p>
+      <button onClick={() => flow.pop()}>Back</button>
+    </div>
+  );
+};

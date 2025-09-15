@@ -31,6 +31,13 @@ const NavigationTestPage: React.FC = () => {
         stack.actions.push('TC3_Step1Screen', {});
       }
     },
+    {
+      id: 'TC04',
+      title: '탭 네비게이션과 스택 병행 관리',
+      action: () => {
+        stack.actions.push('MainTabs', {});
+      }
+    },
     // More scenarios will be added here
   ];
 

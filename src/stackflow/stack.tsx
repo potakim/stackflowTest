@@ -49,12 +49,19 @@ const stack = stackflow({
         TC3_Step1Screen: "/nav-tc3-step1",
         TC3_Step2Screen: "/nav-tc3-step2",
         TC3_Step3Screen: "/nav-tc3-step3",
+
+        // Routes for TC4
+        MainTabs: "/nav-tc4-tabs",
+        HomeTab: "/nav-tc4-home",
+        SearchTab: "/nav-tc4-search",
+        ProfileTab: "/nav-tc4-profile",
+        Article: "/nav-tc4-article/:id",
       },
-      fallbackActivity: () => "A",
+      fallbackActivity: () => "NavHomeScreen",
       useHash: true,
     }),
   ],
-  initialActivity: () => "A",
+  initialActivity: () => "NavHomeScreen",
 });
 
 export const { Stack, useFlow } = stack;
