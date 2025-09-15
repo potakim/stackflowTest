@@ -8,6 +8,9 @@ import * as navScreens from "../components/navigation_screens";
 const allActivities = {
   ...screens,
   ...navScreens,
+  TC1_HomeScreen: navScreens.TC1_HomeScreen,
+  TC1_Screen1: navScreens.TC1_Screen1,
+  TC1_Screen2: navScreens.TC1_Screen2,
 };
 
 const stack = stackflow({
@@ -41,6 +44,11 @@ const stack = stackflow({
         Step2Screen: "/nav-step2",
         Step3Screen: "/nav-step3",
         SuccessScreen: "/nav-success",
+
+        // Routes for TC1
+        TC1_HomeScreen: "/nav-tc1-home",
+        TC1_Screen1: "/nav-tc1-screen1",
+        TC1_Screen2: "/nav-tc1-screen2",
       },
       fallbackActivity: () => "A",
       useHash: true,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useActivity } from '@stackflow/react';
-import { useFlow } from '../stackflow/stack';
+import stack, { useFlow } from '../stackflow/stack';
 
 export const NavHomeScreen = () => (
   <div data-testid="nav-home-screen">
@@ -73,3 +73,40 @@ export const SuccessScreen = () => (
         <p>You have completed the steps.</p>
     </div>
 );
+
+export const TC1_HomeScreen = () => {
+    const flow = useFlow();
+    return (
+        <div data-testid="tc1-home-screen">
+            <h2>TC1: Reset to Home</h2>
+            <button onClick={() => flow.push('TC1_Screen1', {})}>Go to Screen 1</button>
+        </div>
+    );
+};
+
+export const TC1_Screen1 = () => {
+    const flow = useFlow();
+    return (
+        <div data-testid="tc1-screen1">
+            <h2>TC1: Screen 1</h2>
+            <button onClick={() => flow.push('TC1_Screen2', {})}>Go to Screen 2</button>
+            <button onClick={() => flow.pop()}>Back</button>
+        </div>
+    );
+};
+
+export const TC1_Screen2 = () => {
+    const flow = useFlow();
+    return (
+        <div data-testid="tc1-screen2">
+            <h2>TC1: Screen 2</h2>
+            <button onClick={() => {
+                const stackSize = stack.actions.getStack().activities.length;
+                for (let i = 0; i < stackSize - 1; i++) {
+                    flow.pop();
+                }
+            }}>Reset to Home</button>
+            <button onClick={() => flow.pop()}>Back</button>
+        </div>
+    );
+};

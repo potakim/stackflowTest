@@ -2,21 +2,19 @@ import React from 'react';
 import stack, { Stack } from '../stackflow/stack';
 import ErrorBoundary from '../components/ErrorBoundary';
 
-const NavigationTestPage = () => {
-  const scenarios = [
+interface Scenario {
+  id: string;
+  title: string;
+  action: () => void;
+}
+
+const NavigationTestPage: React.FC = () => {
+  const scenarios: Scenario[] = [
     { 
       id: 'TC01', 
       title: '홈 화면으로 이동 시 스택 초기화', 
       action: () => {
-        stack.actions.push('ListScreen', {});
-        setTimeout(() => stack.actions.push('DetailScreen', { id: '1' }), 500);
-        setTimeout(() => {
-          console.log('Resetting stack to NavHomeScreen');
-          // NOTE: reset is not a standard action, this is a placeholder
-          // We will implement this with a custom solution if needed.
-          // For now, we can simulate with replace.
-          stack.actions.replace('NavHomeScreen', {});
-        }, 1000);
+        stack.actions.push('TC1_HomeScreen', {});
       } 
     },
     { 
