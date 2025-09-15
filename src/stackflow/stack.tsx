@@ -3,10 +3,16 @@ import { basicRendererPlugin } from "@stackflow/plugin-renderer-basic";
 import { historySyncPlugin } from "@stackflow/plugin-history-sync";
 import { basicUIPlugin } from "@stackflow/plugin-basic-ui";
 import * as screens from "../components/screens";
+import * as navScreens from "../components/navigation_screens";
+
+const allActivities = {
+  ...screens,
+  ...navScreens,
+};
 
 const stack = stackflow({
   transitionDuration: 350,
-  activities: screens,
+  activities: allActivities,
   plugins: [
     basicRendererPlugin(),
     basicUIPlugin({
@@ -26,6 +32,15 @@ const stack = stackflow({
         PopToTest: "/pop-to-test",
         Modal: "/modal",
         ErrorScreen: "/error",
+
+        // Routes for new navigation test cases
+        NavHomeScreen: "/nav-home",
+        ListScreen: "/nav-list",
+        DetailScreen: "/nav-detail/:id",
+        Step1Screen: "/nav-step1",
+        Step2Screen: "/nav-step2",
+        Step3Screen: "/nav-step3",
+        SuccessScreen: "/nav-success",
       },
       fallbackActivity: () => "A",
       useHash: true,
