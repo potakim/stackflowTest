@@ -478,3 +478,37 @@ export const TC08_C_Screen = () => {
     </div>
   );
 };
+
+// --- TC09: Prevent Duplicated Screen ---
+
+export const TC09_A_Screen = () => {
+  return (
+    <div>
+      <h2>TC09: Screen A</h2>
+      <p>This screen will navigate to Screen B.</p>
+      <button onClick={() => stack.actions.push('TC09_B_Screen', {})}>Go to Screen B</button>
+    </div>
+  );
+};
+
+export const TC09_B_Screen = () => {
+  const { activities } = useStack();
+
+  const handlePush = () => {
+    const lastActivity = activities[activities.length - 1];
+    if (lastActivity?.name !== 'TC09_B_Screen') {
+      stack.actions.push('TC09_B_Screen', {});
+    } else {
+      console.log("Prevented duplicated screen push");
+    }
+  };
+
+  return (
+    <div>
+      <h2>TC09: Screen B</h2>
+      <p>From here, trying to push another Screen B should be prevented.</p>
+      <button onClick={handlePush}>Go to Screen B again (should be prevented)</button>
+      <button onClick={() => stack.actions.pop()}>Back to A</button>
+    </div>
+  );
+};

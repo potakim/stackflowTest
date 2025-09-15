@@ -67,6 +67,13 @@ const NavigationTestPage: React.FC = () => {
         stack.actions.push('TC08_A_Screen', {});
       }
     },
+    {
+      id: 'TC09',
+      title: '중복 화면 방지',
+      action: () => {
+        stack.actions.push('TC09_A_Screen', {});
+      }
+    },
     // More scenarios will be added here
   ];
 

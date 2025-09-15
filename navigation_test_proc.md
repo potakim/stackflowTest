@@ -27,7 +27,7 @@
 | TC06 | 모달과 스택 관계 | ✅ Completed | |
 | TC07 | 조건부 네비게이션 (인증 여부) | ✅ Completed | |
 | TC08 | 스택 일부만 제거 | ✅ Completed | |
-| TC09 | 중복 화면 방지 | ⬜️ Not Started | |
+| TC09 | 중복 화면 방지 | ✅ Completed | - 시나리오: A > B로 이동 후, B에서 다시 B로 이동 시도 시 중복 방지 기능 동작 확인. `preventDuplicated: true` 옵션 사용. |
 | TC10 | 백스택 없이 특정 화면 이동 | ⬜️ Not Started | `replace` 액션 |
 | TC11 | 다중 모달 중첩 관리 | ⬜️ Not Started | |
 | TC12 | 이전 화면 기반 조건 처리 | ⬜️ Not Started | |
