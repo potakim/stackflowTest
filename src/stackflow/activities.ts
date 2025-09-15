@@ -39,6 +39,9 @@ import {
   TC07_HomeScreen,
   TC07_LoginScreen,
   TC07_ProfileScreen,
+  TC08_A_Screen,
+  TC08_B_Screen,
+  TC08_C_Screen,
 } from "../components/navigation_screens";
 
 export const activities = {
@@ -80,4 +83,7 @@ export const activities = {
   TC07_HomeScreen,
   TC07_LoginScreen,
   TC07_ProfileScreen,
+  TC08_A_Screen,
+  TC08_B_Screen,
+  TC08_C_Screen,
 };

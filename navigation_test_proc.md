@@ -26,7 +26,7 @@
 | TC05 | 푸시 알림으로 특정 화면 이동 | ✅ Completed | |
 | TC06 | 모달과 스택 관계 | ✅ Completed | |
 | TC07 | 조건부 네비게이션 (인증 여부) | ✅ Completed | |
-| TC08 | 스택 일부만 제거 | ⬜️ Not Started | |
+| TC08 | 스택 일부만 제거 | ✅ Completed | |
 | TC09 | 중복 화면 방지 | ⬜️ Not Started | |
 | TC10 | 백스택 없이 특정 화면 이동 | ⬜️ Not Started | `replace` 액션 |
 | TC11 | 다중 모달 중첩 관리 | ⬜️ Not Started | |

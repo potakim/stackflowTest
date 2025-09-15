@@ -85,6 +85,11 @@ const stack = stackflow({
         TC07_HomeScreen: "/nav-tc7-home",
         TC07_LoginScreen: "/nav-tc7-login",
         TC07_ProfileScreen: "/nav-tc7-profile",
+
+        // Routes for TC8
+        TC08_A_Screen: "/nav-tc8-a",
+        TC08_B_Screen: "/nav-tc8-b",
+        TC08_C_Screen: "/nav-tc8-c",
       },
       fallbackActivity: () => "NavHomeScreen",
       useHash: true,

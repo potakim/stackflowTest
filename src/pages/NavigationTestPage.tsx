@@ -60,6 +60,13 @@ const NavigationTestPage: React.FC = () => {
         stack.actions.push('TC07_HomeScreen', {});
       }
     },
+    {
+      id: 'TC08',
+      title: '스택 일부만 제거',
+      action: () => {
+        stack.actions.push('TC08_A_Screen', {});
+      }
+    },
     // More scenarios will be added here
   ];
 

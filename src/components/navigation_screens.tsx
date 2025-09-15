@@ -425,3 +425,56 @@ export const TC07_ProfileScreen = () => {
     </div>
   );
 };
+
+// --- TC08: Remove Part of the Stack ---
+
+export const TC08_A_Screen = () => {
+  return (
+    <div>
+      <h2>TC08: Screen A</h2>
+      <button onClick={() => stack.actions.push('TC08_B_Screen', {})}>Go to Screen B</button>
+    </div>
+  );
+};
+
+export const TC08_B_Screen = () => {
+  return (
+    <div>
+      <h2>TC08: Screen B</h2>
+      <button onClick={() => stack.actions.push('TC08_C_Screen', {})}>Go to Screen C</button>
+      <button onClick={() => stack.actions.pop()}>Back to A</button>
+    </div>
+  );
+};
+
+export const TC08_C_Screen = () => {
+  const { activities } = useStack();
+
+  const goBackToA = () => {
+    const targetIndex = activities.findLastIndex(
+      (act: Activity) => act.name === 'TC08_A_Screen',
+    );
+
+    if (targetIndex !== -1) {
+      const popsToPerform = (activities.length - 1) - targetIndex;
+      if (popsToPerform > 0) {
+        for (let i = 0; i < popsToPerform; i++) {
+          stack.actions.pop();
+        }
+      }
+    } else {
+      // Fallback in case Screen A is not found
+      stack.actions.pop(); // Pop C
+      stack.actions.pop(); // Pop B
+    }
+  };
+
+  return (
+    <div>
+      <h2>TC08: Screen C</h2>
+      <p>From here, we will go back to Screen A, removing Screen B from the stack.</p>
+      <button onClick={goBackToA}>Go Back to Screen A (skipping B)</button>
+      <button onClick={() => stack.actions.pop()}>Back to B</button>
+    </div>
+  );
+};
