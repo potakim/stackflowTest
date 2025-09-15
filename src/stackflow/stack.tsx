@@ -52,10 +52,6 @@ const stack = stackflow({
 
         // Routes for TC4
         MainTabs: "/nav-tc4-tabs",
-        HomeTab: "/nav-tc4-home",
-        SearchTab: "/nav-tc4-search",
-        ProfileTab: "/nav-tc4-profile",
-        Article: "/nav-tc4-article/:id",
       },
       fallbackActivity: () => "NavHomeScreen",
       useHash: true,

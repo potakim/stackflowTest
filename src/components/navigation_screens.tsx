@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useActivity, useStack } from '@stackflow/react';
 import type { Activity } from '@stackflow/core';
 import { useFlow } from '../stackflow/stack';
+
+// --- 기존 컴포넌트 (변경 없음) ---
 
 export const NavHomeScreen = () => (
   <div data-testid="nav-home-screen">
@@ -195,64 +197,120 @@ export const TC3_Step3Screen = () => {
     );
 };
 
+// --- TC04: 탭 네비게이션 재구현 ---
+
+type Screen = {
+  name: string;
+  params?: Record<string, string>;
+};
+
+type Stacks = {
+  [key: string]: Screen[];
+};
+
+type TabNavigationContextType = {
+  push: (name: string, params?: Record<string, string>) => void;
+  pop: () => void;
+};
+
+const TabNavigationContext = createContext<TabNavigationContextType | null>(null);
+
+const useTabNavigation = () => {
+  const context = useContext(TabNavigationContext);
+  if (!context) {
+    throw new Error('useTabNavigation must be used within a TabNavigationProvider');
+  }
+  return context;
+};
+
+const componentMap: { [key: string]: React.FC<any> } = {
+  HomeTab,
+  SearchTab,
+  ProfileTab,
+  Article,
+};
+
 export const MainTabs = () => {
-  const flow = useFlow();
-  const { name } = useActivity();
+  const [activeTab, setActiveTab] = useState('Home');
+  const [stacks, setStacks] = useState<Stacks>({
+    Home: [{ name: 'HomeTab' }],
+    Search: [{ name: 'SearchTab' }],
+    Profile: [{ name: 'ProfileTab' }],
+  });
+
+  const currentStack = stacks[activeTab];
+  const currentScreen = currentStack[currentStack.length - 1];
+  const ScreenComponent = componentMap[currentScreen.name];
+
+  const push = (name: string, params?: Record<string, string>) => {
+    setStacks(prev => ({
+      ...prev,
+      [activeTab]: [...prev[activeTab], { name, params }],
+    }));
+  };
+
+  const pop = () => {
+    if (currentStack.length > 1) {
+      setStacks(prev => ({
+        ...prev,
+        [activeTab]: prev[activeTab].slice(0, -1),
+      }));
+    }
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ flex: 1, overflow: 'auto' }}>
-        {name === 'HomeTab' && <HomeTab />}
-        {name === 'SearchTab' && <SearchTab />}
-        {name === 'ProfileTab' && <ProfileTab />}
+    <TabNavigationContext.Provider value={{ push, pop }}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div style={{ flex: 1, overflow: 'auto', padding: '1rem' }}>
+          <ScreenComponent {...currentScreen.params} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-around', borderTop: '1px solid #ccc', padding: '10px 0' }}>
+          <button onClick={() => setActiveTab('Home')} style={{ fontWeight: activeTab === 'Home' ? 'bold' : 'normal' }}>Home</button>
+          <button onClick={() => setActiveTab('Search')} style={{ fontWeight: activeTab === 'Search' ? 'bold' : 'normal' }}>Search</button>
+          <button onClick={() => setActiveTab('Profile')} style={{ fontWeight: activeTab === 'Profile' ? 'bold' : 'normal' }}>Profile</button>
+        </div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around', borderTop: '1px solid #ccc', padding: '10px 0' }}>
-        <button onClick={() => flow.replace('HomeTab', {})}>Home</button>
-        <button onClick={() => flow.replace('SearchTab', {})}>Search</button>
-        <button onClick={() => flow.replace('ProfileTab', {})}>Profile</button>
-      </div>
-    </div>
+    </TabNavigationContext.Provider>
   );
 };
 
-export const HomeTab = () => {
-  const flow = useFlow();
+export function HomeTab() {
+  const { push } = useTabNavigation();
   return (
     <div>
       <h2>Home Tab</h2>
-      <button onClick={() => flow.push('Article', { id: '1' })}>View Article 1</button>
+      <button onClick={() => push('Article', { id: '1' })}>View Article 1</button>
     </div>
   );
 };
 
-export const SearchTab = () => {
-  const flow = useFlow();
+export function SearchTab() {
+  const { push } = useTabNavigation();
   return (
     <div>
       <h2>Search Tab</h2>
-      <button onClick={() => flow.push('Article', { id: '2' })}>View Article 2</button>
+      <button onClick={() => push('Article', { id: '2' })}>View Article 2</button>
     </div>
   );
 };
 
-export const ProfileTab = () => {
-  const flow = useFlow();
+export function ProfileTab() {
+  const { push } = useTabNavigation();
   return (
     <div>
       <h2>Profile Tab</h2>
-      <button onClick={() => flow.push('Article', { id: '3' })}>View Article 3</button>
+      <button onClick={() => push('Article', { id: '3' })}>View Article 3</button>
     </div>
   );
 };
 
-export const Article = () => {
-  const { params } = useActivity();
-  const flow = useFlow();
+export function Article({ id }: { id: string }) {
+  const { pop } = useTabNavigation();
   return (
     <div>
-      <h2>Article {(params as { id: string }).id}</h2>
+      <h2>Article {id}</h2>
       <p>This is the article content.</p>
-      <button onClick={() => flow.pop()}>Back</button>
+      <button onClick={pop}>Back</button>
     </div>
   );
 };
