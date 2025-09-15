@@ -1,6 +1,7 @@
 import React from 'react';
-import { useActivity } from '@stackflow/react';
-import stack, { useFlow } from '../stackflow/stack';
+import { useActivity, useStack } from '@stackflow/react';
+import type { Activity } from '@stackflow/core';
+import { useFlow } from '../stackflow/stack';
 
 export const NavHomeScreen = () => (
   <div data-testid="nav-home-screen">
@@ -97,15 +98,61 @@ export const TC1_Screen1 = () => {
 
 export const TC1_Screen2 = () => {
     const flow = useFlow();
+    const stack = useStack();
     return (
         <div data-testid="tc1-screen2">
             <h2>TC1: Screen 2</h2>
             <button onClick={() => {
-                const stackSize = stack.actions.getStack().activities.length;
+                const stackSize = stack.activities.length;
                 for (let i = 0; i < stackSize - 1; i++) {
                     flow.pop();
                 }
             }}>Reset to Home</button>
+            <button onClick={() => flow.pop()}>Back</button>
+        </div>
+    );
+};
+
+export const TC2_ListScreen = () => {
+    const flow = useFlow();
+    return (
+        <div data-testid="tc2-list-screen">
+            <h2>TC2: List Screen</h2>
+            <button onClick={() => flow.push('TC2_DetailScreen', { id: '1' })}>Go to Detail 1</button>
+        </div>
+    );
+};
+
+export const TC2_DetailScreen = () => {
+    const flow = useFlow();
+    const stack = useStack();
+    const activity = useActivity();
+    const params = activity.params as { id: string };
+    const id = params.id;
+    const nextId = parseInt(id, 10) + 1;
+
+    return (
+        <div data-testid={`tc2-detail-screen-${id}`}>
+            <h2>TC2: Detail Screen {id}</h2>
+            <p>Content for item {id}.</p>
+            <button onClick={() => flow.push('TC2_DetailScreen', { id: nextId.toString() })}>Go to Detail {nextId}</button>
+            <button onClick={() => {
+                const { activities } = stack;
+                
+                const targetIndex = activities.findLastIndex(
+                    (act: Activity) => act.name === 'TC2_ListScreen',
+                );
+
+                if (targetIndex !== -1) {
+                    const popsToPerform = (activities.length - 1) - targetIndex;
+                    
+                    if (popsToPerform > 0) {
+                        for (let i = 0; i < popsToPerform; i++) {
+                            flow.pop();
+                        }
+                    }
+                }
+            }}>Back to List</button>
             <button onClick={() => flow.pop()}>Back</button>
         </div>
     );

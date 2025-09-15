@@ -20,7 +20,7 @@
 | Case ID | Title | Status | Notes |
 |---|---|---|---|
 | TC01 | 홈 화면으로 이동 시 스택 초기화 | ✅ Completed | `reset` 액션 대신 `pop`을 반복하여 스택 초기화 |
-| TC02 | 리스트 > 상세 > ... > 리스트 | ⬜️ Not Started | `popTo` 액션 필요 |
+| TC02 | 리스트 > 상세 > ... > 리스트 | ✅ Completed | `popTo` 액션 대신 `pop`을 반복하여 기능 구현 |
 | TC03 | 스택 내 단계별 Step 관리 | ⬜️ Not Started | |
 | TC04 | 탭 네비게이션과 스택 병행 관리 | ⬜️ Not Started | Stackflow 단독으로 구현 어려울 수 있음 |
 | TC05 | 푸시 알림으로 특정 화면 이동 | ⬜️ Not Started | |

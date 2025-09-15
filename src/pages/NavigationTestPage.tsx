@@ -21,15 +21,7 @@ const NavigationTestPage: React.FC = () => {
       id: 'TC02', 
       title: '리스트 > 상세 > ... > 리스트', 
       action: () => {
-        stack.actions.push('ListScreen', {});
-        setTimeout(() => stack.actions.push('DetailScreen', { id: '1' }), 500);
-        setTimeout(() => stack.actions.push('DetailScreen', { id: '2' }), 1000);
-        setTimeout(() => {
-          console.log('Popping to ListScreen');
-          // NOTE: popTo is not available on stack.actions directly.
-          // This needs a custom implementation like in screens.tsx
-          alert('popTo needs custom implementation');
-        }, 1500);
+        stack.actions.push('TC2_ListScreen', {});
       } 
     },
     {

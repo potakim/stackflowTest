@@ -11,6 +11,8 @@ const allActivities = {
   TC1_HomeScreen: navScreens.TC1_HomeScreen,
   TC1_Screen1: navScreens.TC1_Screen1,
   TC1_Screen2: navScreens.TC1_Screen2,
+  TC2_ListScreen: navScreens.TC2_ListScreen,
+  TC2_DetailScreen: navScreens.TC2_DetailScreen,
 };
 
 const stack = stackflow({
@@ -49,6 +51,10 @@ const stack = stackflow({
         TC1_HomeScreen: "/nav-tc1-home",
         TC1_Screen1: "/nav-tc1-screen1",
         TC1_Screen2: "/nav-tc1-screen2",
+
+        // Routes for TC2
+        TC2_ListScreen: "/nav-tc2-list",
+        TC2_DetailScreen: "/nav-tc2-detail/:id",
       },
       fallbackActivity: () => "A",
       useHash: true,
