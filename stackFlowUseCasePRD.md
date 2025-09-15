@@ -36,13 +36,11 @@
 > 프로젝트 루트 예시
 ```
 /src
-  /app
   /components
-    /screens
+    /ErrorBoundary.tsx
+    /screens.tsx
   /stackflow
-    /activities.ts
     /stack.tsx
-  /App.tsx
   /main.tsx
 ```
 
@@ -50,106 +48,142 @@
 
 ## 3) 활동(Activities) & 라우트 스키마
 
-> 실제 프로젝트의 Activity 리스트와 Params 타입에 맞춰 조정하세요.
+> **참고**: 타입스크립트 버전 및 Stackflow 버전 간의 호환성 문제를 최소화하기 위해, 별도의 `activities.ts` 타입 정의 파일 대신 `stack.tsx`의 `activities` 객체에서 타입을 직접 추론하도록 구현되었습니다.
+
+새롭게 추가된 `Modal`, `ErrorScreen`을 포함한 전체 Activity 리스트는 `stack.tsx` 설정에서 확인할 수 있습니다.
 
 ```ts
-// src/stackflow/activities.ts
-export type Activities =
-  | { name: 'A'; params?: {} }
-  | { name: 'B'; params?: { userId?: number } }
-  | { name: 'C'; params?: {} }
-  | { name: 'Login'; params?: {} }
-  | { name: 'Home'; params?: {} }
-  | { name: 'Product'; params?: { productId: string } }
-  | { name: 'Order'; params?: { orderId?: string } }
-  | { name: 'PaymentComplete'; params?: { receiptId: string } };
-
+// src/components/screens.tsx 의 일부
 // 화면 컴포넌트 예시 (테스트 식별 가능한 data-testid 포함)
-// src/components/screens.tsx
 import React from 'react';
 import { useActivity } from '@stackflow/react';
 
-export const A = () => <div data-testid="screen-A">Screen A</div>;
+export const A = () => (
+  <div data-testid="screen-A">
+    <h2>Screen A</h2>
+    <p>This is the initial screen. Please select a scenario from the left panel.</p>
+  </div>
+);
+
 export const B = () => {
-  const { params } = useActivity<{ userId?: number }>();
+  const { params } = useActivity();
   return (
     <div data-testid="screen-B">
-      Screen B
-      <span data-testid="userId">{params.userId ?? 'default'}</span>
+      <h2>Screen B</h2>
+      <p>User ID: {(params as any).userId ?? 'N/A'}</p>
     </div>
   );
 };
-export const C = () => <div data-testid="screen-C">Screen C</div>;
-export const Login = () => <div data-testid="screen-Login">Login</div>;
-export const Home = () => <div data-testid="screen-Home">Home</div>;
-export const Product = () => <div data-testid="screen-Product">Product</div>;
-export const Order = () => <div data-testid="screen-Order">Order</div>;
-export const PaymentComplete = () => (
-  <div data-testid="screen-PaymentComplete">Payment Complete</div>
-);
+
+// ... 기타 컴포넌트 ...
+
+// 에러 바운더리 테스트용 컴포넌트
+export const ErrorScreen = () => {
+  useEffect(() => {
+    throw new Error("This is a test error for ErrorBoundary.");
+  }, []);
+  return <div>...</div>;
+};
 ```
 
 ---
 
 ## 4) Stackflow 설정
 
-> 아래는 **샘플 페이지용** 설정 예시입니다.
+> 아래는 실제 구현에 사용된 설정 예시입니다. `stackflow` 함수를 사용하며, `basicUIPlugin`을 포함하여 기본적인 UI(헤더 등)를 자동으로 구성합니다.
 
 ```ts
 // src/stackflow/stack.tsx
-import React from 'react';
-import { createStackflow, Stack } from '@stackflow/react';
-import { basicRendererPlugin } from '@stackflow/plugin-basic-renderer';
-import { historySyncPlugin } from '@stackflow/plugin-history-sync';
-import { Activities, A, B, C, Login, Home, Product, Order, PaymentComplete } from '../components/screens';
+import { stackflow } from "@stackflow/react";
+import { basicRendererPlugin } from "@stackflow/plugin-renderer-basic";
+import { historySyncPlugin } from "@stackflow/plugin-history-sync";
+import { basicUIPlugin } from "@stackflow/plugin-basic-ui";
+import * as screens from "../components/screens";
 
-export const { Stack, useFlow } = createStackflow<Activities>({
-  activities: {
-    A, B, C, Login, Home, Product, Order, PaymentComplete,
-  },
+const stack = stackflow({
+  transitionDuration: 350,
+  activities: screens,
   plugins: [
     basicRendererPlugin(),
+    basicUIPlugin({
+      theme: "cupertino",
+    }),
     historySyncPlugin({
-      fallbackActivity: () => 'A',
+      routes: {
+        A: "/",
+        B: "/b",
+        C: "/c",
+        D: "/d",
+        Login: "/login",
+        Home: "/home",
+        Product: "/product/:productId",
+        Order: "/order",
+        PaymentComplete: "/payment-complete",
+        PopToTest: "/pop-to-test",
+        Modal: "/modal",
+        ErrorScreen: "/error",
+      },
+      fallbackActivity: () => "A",
+      useHash: true,
     }),
   ],
-  initialActivity: () => 'A',
+  initialActivity: () => "A",
 });
+
+export const { Stack, useFlow } = stack;
+export default stack;
 ```
 
 ---
 
 ## 5) 샘플 페이지 UI 구성
 
-메인 페이지 (`A` Activity)에 24개 유스케이스를 테스트할 수 있는 버튼 목록을 제공한다. 각 버튼은 해당 시나리오에 맞는 `flow` 액션을 트리거해야 한다.
+샘플 페이지는 2열 레이아웃으로 구성됩니다. 왼쪽 열에는 24개의 유스케이스를 테스트할 수 있는 버튼 목록이 있으며, 오른쪽 열에는 내비게이션 결과가 렌더링되는 `<Stack />` 컴포넌트가 위치합니다.
 
-**UI 예시 (`A` 컴포넌트 내부)**
+이러한 구조는 `src/main.tsx` 파일에서 구현됩니다. 시나리오 버튼들은 `useFlow` 훅 대신 `stack.actions`를 직접 호출하여 내비게이션을 트리거합니다.
+
+**UI 예시 (`src/main.tsx` 내부)**
 
 ```tsx
-// src/components/screens.tsx 의 A 컴포넌트 수정
-import { useFlow } from '../stackflow/stack';
+// src/main.tsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import stack, { Stack } from './stackflow/stack';
+import ErrorBoundary from './components/ErrorBoundary';
+import './index.css';
 
-export const A = () => {
-  const flow = useFlow();
+const scenarios = [
+  { id: 1, title: '기본 푸시/팝', action: () => stack.actions.push('B', {}) },
+  { id: 2, title: '파라미터 전달(필수)', action: () => stack.actions.push('B', { userId: 123 }) },
+  // ... 나머지 시나리오 ...
+  { id: 21, title: '에러 바운더리', action: () => stack.actions.push('ErrorScreen', {}) },
+];
 
-  return (
-    <div data-testid="screen-A">
-      <h1>Stackflow Test Scenarios</h1>
-      <ul>
-        {/* 시나리오 1 */}
-        <li><button onClick={() => flow.push('B')}>[01] Push B</button></li>
-        {/* 시나리오 2 */}
-        <li><button onClick={() => flow.push('B', { userId: 123 })}>[02] Push B with param</button></li>
-        {/* 시나리오 4 */}
-        <li><button onClick={() => {
-          flow.push('Login');
-          setTimeout(() => flow.replace('Home'), 500);
-        }}>[04] Replace Login to Home</button></li>
-        {/* ... 나머지 24개 시나리오 버튼 ... */}
-      </ul>
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <div style={{ display: 'flex', height: '100vh' }}>
+      {/* 왼쪽 열: 시나리오 목록 */}
+      <div style={{ width: '350px', borderRight: '1px solid #ccc', padding: '1rem', overflowY: 'auto' }}>
+        <h1>Stackflow Test Scenarios</h1>
+        <ul>
+          {scenarios.map(s => (
+            <li key={s.id}>
+              <button onClick={s.action}>
+                [{s.id.toString().padStart(2, '0')}] {s.title}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {/* 오른쪽 열: 스택 렌더링 */}
+      <div style={{ flex: 1, position: 'relative' }}>
+        <ErrorBoundary>
+          <Stack />
+        </ErrorBoundary>
+      </div>
     </div>
-  );
-};
+  </React.StrictMode>,
+);
 ```
 
 ---
@@ -181,7 +215,8 @@ export const A = () => {
 21. **[21] 에러 바운더리**: 화면 렌더링 중 에러 발생 시 앱 크래시 대신 에러 화면을 보여주는지 확인
 22. **[22] 접근성 포커스**: 화면 전환 후, 페이지 제목 등 주요 요소로 포커스가 이동하는지 확인
 23. **[23] 성능/메모리 누수**: 많은 화면을 push/pop 반복 후 메모리 사용량이 안정적인지 확인 (개발자 도구)
-24. **[24] 텔레메트리/로깅**: 내비게이션 액션 발생 시 콘솔에 로그가 기록되는지 확인
+24. **[24] 텔레메트리/로깅**: 내비게이션 액션 발생 시 콘솔에 로그가 기록되는지 확인  
+    > **구현 노트**: 타입스크립트 호환성 이슈로 인해 별도의 로깅 플러그인은 구현에서 제외되었습니다. 대신 `main.tsx`의 시나리오 액션에 포함된 `console.log`를 통해 로깅 동작을 확인할 수 있습니다.
 
 ---
 
